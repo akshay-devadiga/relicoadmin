@@ -6,7 +6,7 @@ import Layout from '@/components/Layout/Layout';
 // Pages
 import Dashboard from '@/pages/Dashboard/Dashboard';
 import Typography from '@/pages/Typography/Typography'
-import Tables from '@/pages/Tables/Basic'
+import Products from '@/pages/Products/Basic'
 import Notifications from '@/pages/Notifications/Notifications'
 import Icons from '@/pages/Icons/Icons'
 import Charts from '@/pages/Charts/Charts'
@@ -17,6 +17,7 @@ import Login from "@/pages/Login/Login";
 Vue.use(Router);
 
 export default new Router({
+  mode:'history',
   routes: [
     {
       path: '/login',
@@ -33,36 +34,43 @@ export default new Router({
         path: 'dashboard',
         name: 'Dashboard',
         component: Dashboard,
+        meta: { requiresAuth: true }
       },
       {
         path: 'typography',
         name: 'Typography',
         component: Typography,
+        meta: { requiresAuth: true }
       },
       {
-        path: 'tables',
-        name: 'Tables',
-        component: Tables
+        path: 'products',
+        name: 'Products',
+        component: Products,
+        meta: { requiresAuth: true }
       },
       {
         path: 'notifications',
         name: 'Notifications',
-        component: Notifications
+        component: Notifications,
+        meta: { requiresAuth: true }
       },
       {
         path: 'icons',
         name: 'Icons',
-        component: Icons
+        component: Icons,
+        meta: { requiresAuth: true }
       },
       {
         path: 'charts',
         name: 'Charts',
-        component: Charts
+        component: Charts,
+        meta: { requiresAuth: true }
       },
       {
         path: 'maps',
         name: 'Maps',
-        component: Maps
+        component: Maps,
+        meta: { requiresAuth: true }
       },
     ],
   },

@@ -1,7 +1,12 @@
 <template>
   <v-container fluid class="typography-page">
-    <h1 class="page-title mt-10 mb-6">Typography</h1>
+    <h1 class="page-title mt-10 mb-6">Orders</h1>
     <v-row>
+        <v-data-table
+      :headers="headers"
+      :items="orders"
+      class="elevation-1"
+    />
       <v-col lg=6 cols=12>
         <v-card class="mx-1 mb-1">
           <v-card-title class="pa-6 pb-3">
@@ -86,8 +91,37 @@
 </template>
 
 <script>
+import { getOrderDetails } from '../../apiServices';
 export default {
   name: 'Typography',
+  data(){
+    return{
+      headers: [
+        { text: 'Order Id', value: 'orderId' },
+        { text: 'Name', value: 'name' },
+        { text: 'ContactNo', value: 'ContactNo' },
+        { text: 'AlternativeContactNo', value: 'AlternativeContactNo' },
+        { text: 'Address', value: 'address' },
+        { text: 'Country', value: 'country' },
+        { text: 'Price', value: 'price' }
+      ],
+      orders:[],
+    }
+  },
+  /*
+    AlternativeContactNo: 2147483647
+ContactNo: 2147483647
+EmailVerified: 0
+address: "5/591, Sri, Lakshmi Nagar Road, Raja Nagar, Pitchampalayam Pudur, Tiruppur, Tamil Nadu 641603"
+country: "USA"
+id: 1
+name: "John Wick"
+orderId: 1
+price: 900
+  */
+  async created(){
+    this.orders = await getOrderDetails();
+  }
 };
 </script>
 

@@ -1,4 +1,42 @@
 <template xmlns:div="http://www.w3.org/1999/html">
+<div>
+   <v-container fluid>
+    <div class="tables-basic">
+      <h1 class="page-title mt-10 mb-6">Customers</h1>
+      <v-row>
+        <v-col cols="12">
+          <v-card class="employee-list mb-1 red">
+            <!-- <v-card-title class="pa-6 pb-3">
+              <p>Employee List</p>
+              <v-spacer></v-spacer>
+              <v-text-field
+                v-model="mock.employeeTable.search"
+                append-icon="mdi-magnify"
+                label="Search"
+                clearable
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-card-title> -->
+              <v-data-table
+      :headers="headers"
+      :items="customers"
+      class="elevation-1"
+    >
+        <template v-slot:item.EmailVerified="{ item }">
+        <v-chip
+          :color="getColor(item.EmailVerified)"
+          dark
+        >
+          {{ item.EmailVerified==0 ? 'Not Verified' : 'Verified' }}
+        </v-chip>
+      </template>
+    </v-data-table>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
+  </v-container>
   <v-container fluid class="notification-page">
     <h1 class="page-title mt-10 mb-9">Notifications</h1>
     <v-row class="mb-5">
@@ -158,14 +196,26 @@ import "vue-toastification/dist/index.css";</span>
       </v-col>
     </v-row>
   </v-container>
+</div>
+  
 </template>
 
 <script>
-
+import { getCustomers } from '../../apiServices';
 export default {
   name: 'Notifications',
   data() {
     return {
+      headers: [
+        { text: '#', value: 'id' },
+        { text: 'Name', value: 'name' },
+        { text: 'ContactNo', value: 'ContactNo' },
+        { text: 'AlternativeContactNo', value: 'AlternativeContactNo' },
+        { text: 'Address', value: 'address' },
+        { text: 'Country', value: 'country' },
+        { text: 'Email Verified', value: 'EmailVerified' }
+      ],
+      customers:[],
       notificationsType: [
         {
           icon: 'mdi-email',
@@ -277,6 +327,9 @@ export default {
       position: 'top-right'
     }
   },
+  async created(){
+    this.customers = await getCustomers();
+  },
   methods: {
     addInfoNotification() {
       this.$toast.info("New user feedback received", {
@@ -326,6 +379,10 @@ export default {
       this.$toasted.options.position = this.position;
       this.$toasted.show(null);
     },
+    getColor (status) {
+      if (status == 0) return 'red'
+      else return 'green'
+    }
   }
 };
 

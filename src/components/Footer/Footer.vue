@@ -1,7 +1,7 @@
 <template>
   <v-footer class="px-0 mt-10" color="transparent">
     <v-row no-gutters>
-      <div>
+      <!-- <div>
         <v-btn
               v-for="link in links"
               :key="link.link"
@@ -12,8 +12,8 @@
           >
             {{ link.text }}
           </v-btn>
-      </div>
-      <div>
+      </div> -->
+      <!-- <div>
         <v-btn
                 v-for="icon in icons"
                 :key="icon.icon"
@@ -24,7 +24,7 @@
         >
           <v-icon size="24px">{{ icon.icon }}</v-icon>
         </v-btn>
-      </div>
+      </div> -->
     </v-row>
   </v-footer>
 </template>
