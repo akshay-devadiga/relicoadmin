@@ -4,7 +4,7 @@
       <h1 class="page-title mt-10 mb-6">Products</h1>
       <v-row>
         <v-col cols="12">
-          {{editedItem}}
+          {{ editedItem }}
           <v-card class="employee-list mb-1">
             <v-data-table
               :headers="headers"
@@ -49,7 +49,7 @@
                               ></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-select
+                              <v-select return-object
                                 v-model="editedItem.gender"
                                 :items="genders"
                                 item-text="Name"
@@ -59,7 +59,7 @@
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-select
+                              <v-select return-object
                                 v-model="editedItem.color"
                                 :items="colors"
                                 item-text="Name"
@@ -69,7 +69,7 @@
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-select
+                              <v-select return-object
                                 v-model="editedItem.size"
                                 :items="sizes"
                                 item-text="Name"
@@ -79,7 +79,7 @@
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-select
+                              <v-select return-object
                                 v-model="editedItem.brand"
                                 :items="brands"
                                 item-text="Name"
@@ -89,12 +89,25 @@
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                v-model="editedItem.discount"
-                                label="Discount"
-                              ></v-text-field>
+                                 <v-select return-object
+                                    v-model="editedItem.discount"
+                                    :items="discounts"
+                                    item-text="DiscountPercentage"
+                                    item-value="Id"
+                                    label="Discount"
+                                    single-line
+                              ></v-select>
                             </v-col>
-
+                             <v-col cols="12" sm="6" md="4">
+                                 <v-select return-object
+                                    v-model="editedItem.category"
+                                    :items="categories"
+                                    item-text="Name"
+                                    item-value="Id"
+                                    label="Category"
+                                    single-line
+                              ></v-select>
+                            </v-col>
                             <v-col cols="12" sm="6" md="4">
                               <v-text-field
                                 v-model="editedItem.stock"
@@ -102,44 +115,63 @@
                               ></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
+                              <span class="caption font-weight-bold">Add prices</span>
+                            </v-col>
+                            <v-col cols="12" sm="12" md="12">
                               <v-row align="center">
-                                <v-col class="d-flex mx-3 my-1 elevation-1 rounded" v-for="priceOb in editedItem.prices" :key="priceOb.id" cols="4">
+                                <v-col
+                                  class="d-flex mx-3 my-1 elevation-1 rounded"
+                                  v-for="priceOb in editedItem.prices"
+                                  :key="priceOb.id"
+                                  cols="4"
+                                >
                                   <v-row align="center">
-                                    <v-col class="d-flex pa-0 ma-0 justify-center" cols="3">
-                                       <v-icon small color="success" left>
-                                          mdi-cash
-                                       </v-icon>
-                                      <v-label> <span class="caption">{{priceOb.code}}</span></v-label>
+                                    <v-col
+                                      class="d-flex pa-0 ma-0 justify-center"
+                                      cols="3"
+                                    >
+                                      <v-icon small color="success" left>
+                                        mdi-cash
+                                      </v-icon>
+                                      <v-label>
+                                        <span class="caption">{{
+                                          priceOb.code
+                                        }}</span></v-label
+                                      >
                                     </v-col>
                                     <v-col class="d-flex pa-0" cols="7">
                                       <v-text-field
-                                         flat
-                                         solo
-                                         height="30"
-                                         dense
-                                         hide-details
+                                        flat
+                                        solo
+                                        height="30"
+                                        dense
+                                        hide-details
                                         v-model="priceOb.price"
                                         placeholder="Enter Price"
                                         class="ma-0 pa-0"
                                       />
                                     </v-col>
-                                     <v-col class="d-flex pa-0 ma-0" cols="1">
-                                         <v-btn
-                                          class="ma-0 pa-0 remove-price"
-                                          color="error"
-                                          @click="removePrice(priceOb)"
-                                          dark
-                                          text
-                                          icon
-                                        >
-                                          <v-icon dark>
-                                            mdi-close
-                                          </v-icon>
-                                        </v-btn>
+                                    <v-col class="d-flex pa-0 ma-0" cols="1">
+                                      <v-btn
+                                        class="ma-0 pa-0 remove-price"
+                                        color="error"
+                                        @click="removePrice(priceOb)"
+                                        dark
+                                        text
+                                        icon
+                                      >
+                                        <v-icon dark> mdi-close </v-icon>
+                                      </v-btn>
                                     </v-col>
                                   </v-row>
                                 </v-col>
                               </v-row>
+                            </v-col>
+                             <v-col cols="12" sm="12" md="12">
+                              <span class="caption font-weight-bold">Choose image/images</span>
+                            </v-col>
+                             <v-col  cols="12" sm="12" md="12">
+                                    <file-upload-component/>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
                               <v-switch
@@ -185,21 +217,16 @@
                   </v-dialog>
                 </v-toolbar>
               </template>
-              <template v-slot:item.prices="{ item }">
-              <div v-for="price in item.prices" :key="price.id">  <v-chip
-                  class="mt-1"
-                  color="green"
-                  label
-                   outlined
-                    >
-                      <v-icon left>
-          mdi-cash
-        </v-icon>
-          {{ `${price.code} - ${price.price}`}}
-        </v-chip></div>
-
+              <template v-slot:[`item.prices`]='{ item }'>
+                <div v-for="price in item.prices" :key="price.id">
+                  <v-chip class="mt-1" color="green" label outlined>
+                    <v-icon left> mdi-cash </v-icon>
+                    {{ `${price.code} - ${price.price}` }}
+                  </v-chip>
+                </div>
               </template>
-              <template v-slot:item.actions="{ item }">
+              
+              <template v-slot:[`item.actions`]='{ item }'>
                 <v-icon small class="mr-2" @click="editItem(item)">
                   mdi-pencil
                 </v-icon>
@@ -208,12 +235,12 @@
               <template v-slot:no-data>
                 <v-btn color="primary" @click="initialize"> Reset </v-btn>
               </template>
-              <template v-slot:item.status="{ item }">
+              <template v-slot:[`item.status`]='{ item }'>
                 <v-chip :color="getColor(item.status)" dark>
                   {{ item.status ? "Displayed" : "Hidden" }}
                 </v-chip>
               </template>
-              <template v-slot:item.image="{ item }">
+              <template  v-slot:[`item.image`]='{ item }'>
                 <v-img height="150" width="150" contain :src="item.image">
                 </v-img>
               </template>
@@ -234,12 +261,16 @@ import {
   getSizes,
   getBrands,
   getColors,
-  getPricesById,
   getCountries,
+  addProducts,
+  getDiscounts
 } from "../../apiServices";
-import Vue from "vue";
+import FileUploadComponent from "../../components/FileUploadComponent.vue";
 import { v4 as uuidv4 } from "uuid";
 export default {
+  components:{
+    FileUploadComponent
+  },
   data() {
     return {
       mock,
@@ -253,11 +284,12 @@ export default {
         },
         { text: "Image", value: "image" },
         { text: "Name", value: "name" },
-        { text: "Gender", value: "gender" },
-        { text: "Color", value: "color" },
-        { text: "Size", value: "size" },
-        { text: "Brand", value: "brand" },
-        { text: "Discount", value: "discount" },
+        { text: "Gender", value: "gender.Name" },
+        { text: "Color", value: "color.Name" },
+        { text: "Size", value: "size.Name" },
+        { text: "Brand", value: "brand.Name" },
+        { text: "Category", value: "category.Name" },
+        { text: "Discount", value: "discount.DiscountPercentage" },
         { text: "Stock", value: "stock" },
         { text: "Status", value: "status" },
         { text: "Prices", value: "prices" },
@@ -276,6 +308,7 @@ export default {
         discount: 0,
         stock: 0,
         status: 1,
+        category:"",
         prices: [],
       },
       defaultItem: {
@@ -288,6 +321,7 @@ export default {
         discount: 0,
         stock: 0,
         status: 0,
+        category:"",
         prices: [],
       },
       genders: [],
@@ -298,26 +332,28 @@ export default {
       search: "",
       position: "top-right",
       countries: [],
-      newProductId:''
+      newProductId: "",
+      discounts:[]
     };
   },
   async created() {
     this.products = await getProducts();
-    this.products.forEach(async (product) => {
-      // let response = await getPricesById(product.productId);
-      // if(response[0]){
-      //      let prices = response[0].prices.split(',');
-      //     Vue.set(product,'ind',prices[0]);
-      //     Vue.set(product,'aus',prices[1]);
-      //     Vue.set(product,'usa',prices[2]);
-      // }
-    });
+    // this.products.forEach(async (product) => {
+    //   // let response = await getPricesById(product.productId);
+    //   // if(response[0]){
+    //   //      let prices = response[0].prices.split(',');
+    //   //     Vue.set(product,'ind',prices[0]);
+    //   //     Vue.set(product,'aus',prices[1]);
+    //   //     Vue.set(product,'usa',prices[2]);
+    //   // }
+    // });
     this.genders = await getGenders();
     this.categories = await getCategories();
     this.sizes = await getSizes();
     this.brands = await getBrands();
     this.colors = await getColors();
     this.countries = await getCountries();
+    this.discounts = await getDiscounts();
     this.addPricesForSelectedItem();
     this.newProductId = uuidv4();
   },
@@ -337,16 +373,19 @@ export default {
     },
   },
   methods: {
-    addPricesForSelectedItem(){
+    addPricesForSelectedItem() {
       this.editedItem.productId = this.newProductId;
-      if(this.editedItem.prices.length==0){
-        for (var i=0;i<this.countries.length;i++){
-        this.editedItem.prices.push({price:'',code:this.countries[i].Code,id:this.countries[i].Id});
-       } 
+      if (this.editedItem.prices.length == 0) {
+        for (var i = 0; i < this.countries.length; i++) {
+          this.editedItem.prices.push({
+            price: "",
+            code: this.countries[i].Code,
+            id: this.countries[i].Id,
+          });
+        }
       }
-       
     },
-    removePrice(priceOb){
+    removePrice(priceOb) {
       this.editedIndex = this.editedItem.prices.indexOf(priceOb);
       this.editedItem.prices.splice(this.editedIndex, 1);
     },
@@ -383,7 +422,7 @@ export default {
       });
     },
 
-    save() {
+    async save() {
       if (this.editedIndex > -1) {
         this.$toast.success("Product updated successfully", {
           position: this.position,
@@ -400,6 +439,7 @@ export default {
         Object.assign(this.products[this.editedIndex], this.editedItem);
       } else {
         console.log(this.editedItem);
+        await addProducts(this.editedItem);
         this.products.unshift(this.editedItem);
         this.$toast.success("Product added successfully", {
           position: this.position,

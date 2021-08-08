@@ -8,6 +8,16 @@ export const getProducts = async () => {
     }
 }
 
+
+export const getDiscounts = async () => {
+  try {
+    const response = await axios.get(`/discounts`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const getCustomers = async () => {
     try {
       const response = await axios.get(`/customers`);
@@ -16,6 +26,7 @@ export const getCustomers = async () => {
       console.error(error);
     }
 }
+
 export const getGenders = async () => {
     try {
       const response = await axios.get(`/genders`);
@@ -24,6 +35,7 @@ export const getGenders = async () => {
       console.error(error);
     }
 }
+
 export const getCategories = async () => {
     try {
       const response = await axios.get(`/categories`);
@@ -87,3 +99,14 @@ export const getOrderDetails = async () => {
     console.error(error);
   }
 }
+
+
+export const addProducts = async (product) => {
+  try {
+    const response = await axios.post(`/products`,product);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
