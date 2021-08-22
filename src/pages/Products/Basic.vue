@@ -338,15 +338,21 @@ export default {
   },
   async created() {
     this.products = await getProducts();
-    // this.products.forEach(async (product) => {
-    //   // let response = await getPricesById(product.productId);
-    //   // if(response[0]){
-    //   //      let prices = response[0].prices.split(',');
-    //   //     Vue.set(product,'ind',prices[0]);
-    //   //     Vue.set(product,'aus',prices[1]);
-    //   //     Vue.set(product,'usa',prices[2]);
-    //   // }
-    // });
+    this.products.forEach(async (product) => {
+      product.gender=JSON.parse(product.gender);
+      product.size=JSON.parse(product.size);
+      product.color=JSON.parse(product.color);
+      product.brand=JSON.parse(product.brand);
+      product.category=JSON.parse(product.category);
+
+      // // let response = await getPricesById(product.productId);
+      // if(response[0]){
+      //      let prices = response[0].prices.split(',');
+      //     Vue.set(product,'ind',prices[0]);
+      //     Vue.set(product,'aus',prices[1]);
+      //     Vue.set(product,'usa',prices[2]);
+      // }
+    });
     this.genders = await getGenders();
     this.categories = await getCategories();
     this.sizes = await getSizes();
