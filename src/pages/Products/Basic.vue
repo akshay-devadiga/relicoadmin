@@ -4,7 +4,7 @@
       <h1 class="page-title mt-10 mb-6">Products</h1>
       <v-row>
         <v-col cols="12">
-          {{ editedItem }}
+          <!-- {{ editedItem }} -->
           <v-card class="employee-list mb-1">
             <v-data-table
               :headers="headers"
@@ -89,7 +89,8 @@
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                 <v-select return-object
+                                <v-select 
+                                    return-object
                                     v-model="editedItem.discount"
                                     :items="discounts"
                                     item-text="DiscountPercentage"
@@ -103,7 +104,7 @@
                                     v-model="editedItem.category"
                                     :items="categories"
                                     item-text="Name"
-                                    item-value="Id"
+                                    item-value="Name"
                                     label="Category"
                                     single-line
                               ></v-select>
@@ -135,8 +136,8 @@
                                       </v-icon>
                                       <v-label>
                                         <span class="caption">{{
-                                          priceOb.code
-                                        }}</span></v-label
+                                          priceOb.code 
+                                        }}  </span></v-label
                                       >
                                     </v-col>
                                     <v-col class="d-flex pa-0" cols="7">
@@ -146,6 +147,7 @@
                                         height="30"
                                         dense
                                         hide-details
+                                        type="number"
                                         v-model="priceOb.price"
                                         placeholder="Enter Price"
                                         class="ma-0 pa-0"
@@ -171,7 +173,7 @@
                               <span class="caption font-weight-bold">Choose image/images</span>
                             </v-col>
                              <v-col  cols="12" sm="12" md="12">
-                                    <file-upload-component/>
+                                    <file-upload-component @files-updated="updateImage" :imagefiles="editedItem.images"/>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
                               <v-switch
@@ -240,9 +242,23 @@
                   {{ item.status ? "Displayed" : "Hidden" }}
                 </v-chip>
               </template>
-              <template  v-slot:[`item.image`]='{ item }'>
-                <v-img height="150" width="150" contain :src="item.image">
-                </v-img>
+              <!-- eslint-disable-next-line -->
+              <template  v-slot:[`item.images`]='{ item }'>
+                    <v-card
+              elevation="24"
+              max-width="40"
+              class="mx-auto"
+    >
+                       <v-carousel height="40" width="40" cycle hide-delimiters  :show-arrows="false">
+      <v-carousel-item
+        v-for="(item,i) in item.images"
+        :key="i"
+       
+      >   
+    
+        <v-img :src="item.fileUrl"  aspect-ratio="1" contain></v-img> </v-carousel-item>
+    </v-carousel>
+                    </v-card>
               </template>
             </v-data-table>
           </v-card>
@@ -263,7 +279,8 @@ import {
   getColors,
   getCountries,
   addProducts,
-  getDiscounts
+  getDiscounts,
+  getPricesById
 } from "../../apiServices";
 import FileUploadComponent from "../../components/FileUploadComponent.vue";
 import { v4 as uuidv4 } from "uuid";
@@ -282,7 +299,7 @@ export default {
           sortable: false,
           value: "productId",
         },
-        { text: "Image", value: "image" },
+        { text: "Images", value: "images" },
         { text: "Name", value: "name" },
         { text: "Gender", value: "gender.Name" },
         { text: "Color", value: "color.Name" },
@@ -305,9 +322,10 @@ export default {
         color: "",
         size: "",
         brand: "",
-        discount: 0,
+        discount: "",
         stock: 0,
         status: 1,
+        images:[],
         category:"",
         prices: [],
       },
@@ -318,10 +336,11 @@ export default {
         color: "",
         size: "",
         brand: "",
-        discount: 0,
+        discount: "",
         stock: 0,
         status: 0,
         category:"",
+        images:[],
         prices: [],
       },
       genders: [],
@@ -337,6 +356,7 @@ export default {
     };
   },
   async created() {
+    this.discounts = await getDiscounts();
     this.products = await getProducts();
     this.products.forEach(async (product) => {
       product.gender=JSON.parse(product.gender);
@@ -344,14 +364,20 @@ export default {
       product.color=JSON.parse(product.color);
       product.brand=JSON.parse(product.brand);
       product.category=JSON.parse(product.category);
-
-      // // let response = await getPricesById(product.productId);
-      // if(response[0]){
-      //      let prices = response[0].prices.split(',');
-      //     Vue.set(product,'ind',prices[0]);
-      //     Vue.set(product,'aus',prices[1]);
-      //     Vue.set(product,'usa',prices[2]);
-      // }
+      product.discount=JSON.parse(product.discount);
+      /*
+          TODO- Fix later Edge case - Discount has issue with object reference 
+      */
+      if(product.discount){
+        product.discount = this.discounts.find(dis=>dis.Id==product.discount.Id);
+      }
+      let response = await getPricesById(product.productId);
+      let prices = response[0].prices;
+      if(prices)
+        product.prices=JSON.parse(prices);
+      if(product.image)
+        product.images=JSON.parse(product.image);
+        delete product.image
     });
     this.genders = await getGenders();
     this.categories = await getCategories();
@@ -359,7 +385,7 @@ export default {
     this.brands = await getBrands();
     this.colors = await getColors();
     this.countries = await getCountries();
-    this.discounts = await getDiscounts();
+    
     this.addPricesForSelectedItem();
     this.newProductId = uuidv4();
   },
@@ -379,6 +405,10 @@ export default {
     },
   },
   methods: {
+    updateImage(e){
+      this.editedItem.images = e;
+      console.log(this.editedItem);
+    },
     addPricesForSelectedItem() {
       this.editedItem.productId = this.newProductId;
       if (this.editedItem.prices.length == 0) {

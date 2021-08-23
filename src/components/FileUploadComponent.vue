@@ -15,7 +15,7 @@
       </v-col>
       <v-col cols="3" v-for="(file, index) in files" :key="index">
         <v-card class="mx-auto" max-width="120" height="120" width="140">
-          <v-img :src="file.url" height="120px"></v-img>
+          <v-img :src="file.fileUrl" height="120px"></v-img>
         </v-card>
       </v-col>
     </v-row>
@@ -30,7 +30,16 @@
 </template>
 
 <script>
+import {
+  uploadFile
+} from "../apiServices";
 export default {
+  props:{
+    imagefiles:{
+      type:Array,
+      default: () => []
+    }
+  },
   data() {
     return {
       length: 1,
@@ -38,36 +47,33 @@ export default {
       files: [],
     };
   },
+  watch:{
+    imagefiles(value){
+      this.files = value;
+    }
+  },
   methods: {
     uploadImage() {
       this.$refs.uploadFileReference.click();
     },
-    uploadFileReference(e) {
-      let files = e.target.files || e.dataTransfer.files;
-      this.length = files.length;
-      this.showImage(files);
+    gatherFormData() {
+        const data = new FormData();
+        let files = this.$refs.uploadFileReference.files;
+        for (var i = 0; i < files.length; i++) {
+           data.append('files', files[i]);
+        }
+        return data;
     },
-    showImage(files) {
-      // if (files.length > 1) {
+    async uploadFileReference() {
+      let payload = await this.gatherFormData();
+      let response = await uploadFile(payload);
+      this.showImage(response);
+    },
+    async showImage(response) {
       this.files = [];
-      /** Solution provided by Chem **/
-      Array.from(files).forEach((file, idx) => {
-        const fileReader = new FileReader();
-        const getResult = new Promise((resolve) => {
-          console.log(resolve);
-          fileReader.onload = (e) => {
-            this.files.push({
-              id: idx,
-              url: e.target.result,
-            });
-          };
-        });
+      this.files = response;
+      this.$emit('files-updated',this.files);
 
-        fileReader.readAsDataURL(file);
-        return getResult.then((file) => {
-          return file;
-        });
-      });
     },
   },
 };

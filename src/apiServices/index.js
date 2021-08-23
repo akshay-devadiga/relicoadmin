@@ -110,3 +110,18 @@ export const addProducts = async (product) => {
   }
 }
 
+
+export const uploadFile = async (files) => {
+  try {
+    let config = {
+      header : {
+       'Content-Type' : 'multipart/form-data'
+     }
+    }
+    const response = await axios.post(`/upload`,files,config);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
