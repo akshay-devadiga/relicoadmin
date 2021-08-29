@@ -70,16 +70,6 @@
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
                               <v-select return-object
-                                v-model="editedItem.size"
-                                :items="sizes"
-                                item-text="Name"
-                                item-value="Name"
-                                label="Size"
-                                single-line
-                              ></v-select>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="4">
-                              <v-select return-object
                                 v-model="editedItem.brand"
                                 :items="brands"
                                 item-text="Name"
@@ -109,12 +99,64 @@
                                     single-line
                               ></v-select>
                             </v-col>
-                            <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                v-model="editedItem.stock"
-                                label="Stock"
-                              ></v-text-field>
+                            <v-col cols="12" sm="12" md="12">
+                              <span class="caption font-weight-bold">Add sizes</span>
                             </v-col>
+                             <v-col cols="12" sm="12" md="12">
+                              <v-switch
+                                :label="editedItem.hideSize?'Is Not Applicable':'Is Applicable'"
+                                v-model="editedItem.hideSize"
+                              ></v-switch>
+                            </v-col>
+                            <v-col v-if="!editedItem.hideSize" cols="12" sm="12" md="12">
+                              <v-row align="center">
+                                <v-col
+                                  class="d-flex mx-3 my-1 elevation-1 rounded"
+                                  v-for="sizeOb in editedItem.sizevariants"
+                                  :key="sizeOb.sizeVariantId"
+                                  cols="4"
+                                >
+                                  <v-row align="center">
+                                    <v-col
+                                      class="d-flex pa-0 ma-0 justify-center"
+                                      cols="3"
+                                    >
+                                      <v-label>
+                                        <span class="caption">{{
+                                          sizeOb.Name 
+                                        }}  </span></v-label
+                                      >
+                                    </v-col>
+                                    <v-col class="d-flex pa-0" cols="7">
+                                      <v-text-field
+                                        flat
+                                        solo
+                                        height="30"
+                                        dense
+                                        hide-details
+                                        type="number"
+                                        v-model="sizeOb.stock"
+                                        placeholder="Enter Stock"
+                                        class="ma-0 pa-0"
+                                      />
+                                    </v-col>
+                                    <v-col class="d-flex pa-0 ma-0" cols="1">
+                                      <v-btn
+                                        class="ma-0 pa-0 remove-price"
+                                        color="error"
+                                        @click="removeSize(sizeOb)"
+                                        dark
+                                        text
+                                        icon
+                                      >
+                                        <v-icon dark> mdi-close </v-icon>
+                                      </v-btn>
+                                    </v-col>
+                                  </v-row>
+                                </v-col>
+                              </v-row>
+                            </v-col>
+
                             <v-col cols="12" sm="12" md="12">
                               <span class="caption font-weight-bold">Add prices</span>
                             </v-col>
@@ -219,6 +261,14 @@
                   </v-dialog>
                 </v-toolbar>
               </template>
+                <template v-slot:[`item.sizevariants`]='{ item }'>
+                {{sizevariants}}
+                <div v-for="size in item.sizevariants" :key="size.sizeVariantId">
+                  <v-chip class="mt-1" color="primary" label>
+                    {{ `${size.Name} - ${size.stock}` }}
+                  </v-chip>
+                </div>
+              </template>
               <template v-slot:[`item.prices`]='{ item }'>
                 <div v-for="price in item.prices" :key="price.id">
                   <v-chip class="mt-1" color="green" label outlined>
@@ -255,7 +305,6 @@
         :key="i"
        
       >   
-    
         <v-img :src="item.fileUrl"  aspect-ratio="1" contain></v-img> </v-carousel-item>
     </v-carousel>
                     </v-card>
@@ -279,8 +328,10 @@ import {
   getColors,
   getCountries,
   addProducts,
+  updateProducts,
   getDiscounts,
-  getPricesById
+  getPricesById,
+  getSizesById
 } from "../../apiServices";
 import FileUploadComponent from "../../components/FileUploadComponent.vue";
 import { v4 as uuidv4 } from "uuid";
@@ -303,11 +354,10 @@ export default {
         { text: "Name", value: "name" },
         { text: "Gender", value: "gender.Name" },
         { text: "Color", value: "color.Name" },
-        { text: "Size", value: "size.Name" },
+        { text: "Size with stock", value: "sizevariants" },
         { text: "Brand", value: "brand.Name" },
         { text: "Category", value: "category.Name" },
         { text: "Discount", value: "discount.DiscountPercentage" },
-        { text: "Stock", value: "stock" },
         { text: "Status", value: "status" },
         { text: "Prices", value: "prices" },
         { text: "Actions", value: "actions", sortable: false },
@@ -317,13 +367,13 @@ export default {
       dialogDelete: false,
       editedItem: {
         productId: 0,
+        hideSize:false,
         name: "",
         gender: "",
         color: "",
-        size: "",
+        sizevariants: [],
         brand: "",
         discount: "",
-        stock: 0,
         status: 1,
         images:[],
         category:"",
@@ -331,13 +381,13 @@ export default {
       },
       defaultItem: {
         productId: 0,
+        hideSize:false,
         name: "",
         gender: "Female",
         color: "",
-        size: "",
+        sizevariants: [],
         brand: "",
         discount: "",
-        stock: 0,
         status: 0,
         category:"",
         images:[],
@@ -359,8 +409,7 @@ export default {
     this.discounts = await getDiscounts();
     this.products = await getProducts();
     this.products.forEach(async (product) => {
-      product.gender=JSON.parse(product.gender);
-      product.size=JSON.parse(product.size);
+      product.gender=JSON.parse(product.gender)
       product.color=JSON.parse(product.color);
       product.brand=JSON.parse(product.brand);
       product.category=JSON.parse(product.category);
@@ -371,14 +420,22 @@ export default {
       if(product.discount){
         product.discount = this.discounts.find(dis=>dis.Id==product.discount.Id);
       }
-      let response = await getPricesById(product.productId);
-      let prices = response[0].prices;
+      let response1 = await getPricesById(product.id);
+      let prices = response1[0].prices;
+      let response2 = await getSizesById(product.id);
+      let sizevariants = response2[0].sizevariants;
+
       if(prices)
         product.prices=JSON.parse(prices);
-      if(product.image)
-        product.images=JSON.parse(product.image);
-        delete product.image
+
+      if(sizevariants)
+        product.sizevariants=JSON.parse(sizevariants);
+
+      if(product.images)
+        product.images=JSON.parse(product.images);
+     
     });
+    
     this.genders = await getGenders();
     this.categories = await getCategories();
     this.sizes = await getSizes();
@@ -387,6 +444,7 @@ export default {
     this.countries = await getCountries();
     
     this.addPricesForSelectedItem();
+    this.addSizesForSelectedItem();
     this.newProductId = uuidv4();
   },
   computed: {
@@ -416,7 +474,8 @@ export default {
           this.editedItem.prices.push({
             price: "",
             code: this.countries[i].Code,
-            id: this.countries[i].Id,
+            Id:this.countries[i].Id,
+            countryId: this.countries[i].Id,
           });
         }
       }
@@ -424,6 +483,24 @@ export default {
     removePrice(priceOb) {
       this.editedIndex = this.editedItem.prices.indexOf(priceOb);
       this.editedItem.prices.splice(this.editedIndex, 1);
+    },
+    addSizesForSelectedItem() {
+      this.editedItem.productId = this.newProductId;
+      if (this.editedItem.sizevariants.length == 0) {
+        for (var i = 1; i < this.sizes.length; i++) {
+          let payload = {
+            SizeId: this.sizes[i].Id,
+            Name: this.sizes[i].Name,
+            Id:this.sizes[i].Id,
+            stock: "",
+          };
+          this.editedItem.sizevariants.push(payload);
+        }
+      }
+    },
+    removeSize(sizeOb) {
+      this.editedIndex = this.editedItem.sizevariants.indexOf(sizeOb);
+      this.editedItem.sizevariants.splice(this.editedIndex, 1);
     },
     editItem(item) {
       this.editedIndex = this.products.indexOf(item);
@@ -459,6 +536,11 @@ export default {
     },
 
     async save() {
+      if(this.editedItem.hideSize){
+            this.editedItem.sizevariants = [];
+            this.editedItem.sizevariants.push(this.sizes[0]);
+      }
+
       if (this.editedIndex > -1) {
         this.$toast.success("Product updated successfully", {
           position: this.position,
@@ -472,6 +554,8 @@ export default {
           closeButton: "button",
           icon: true,
         });
+
+        await updateProducts(this.editedItem);
         Object.assign(this.products[this.editedIndex], this.editedItem);
       } else {
         console.log(this.editedItem);

@@ -72,14 +72,24 @@ export const getColors = async () => {
 }
 
 
-export const getPricesById = async (productInventoryId) =>{
+export const getPricesById = async (productId) =>{
     try {
-        const response = await axios.get(`/prices/${productInventoryId}`);
+        const response = await axios.get(`/prices/${productId}`);
         return response.data;
       } catch (error) {
         console.error(error);
       }
     
+}
+
+export const getSizesById = async (productId) =>{
+  try {
+      const response = await axios.get(`/sizes/${productId}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  
 }
 
 export const getCountries = async () => {
@@ -104,6 +114,15 @@ export const getOrderDetails = async () => {
 export const addProducts = async (product) => {
   try {
     const response = await axios.post(`/products`,product);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const updateProducts = async (product) => {
+  try {
+    const response = await axios.put(`/products`,product);
     return response.data;
   } catch (error) {
     console.error(error);
