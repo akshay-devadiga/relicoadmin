@@ -466,6 +466,8 @@ export default {
       countries: [],
       newProductId: "",
       discounts: [],
+      isEditMode:false,
+      isAddMode:false
     };
   },
   async created() {
@@ -525,6 +527,8 @@ export default {
   },
   methods: {
     addNewProduct() {
+      this.isEditMode=false;
+      this.isAddMode=true;
       this.addSizesForSelectedItem();
       this.addPricesForSelectedItem();
     },
@@ -568,6 +572,8 @@ export default {
       this.editedItem.sizevariants.splice(this.editedIndex, 1);
     },
     editItem(item) {
+      this.isEditMode=true;
+      this.isAddMode=false;
       this.editedIndex = this.products.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
@@ -608,8 +614,7 @@ export default {
             this.editedItem.sizevariants = [];
             this.editedItem.sizevariants.push(this.sizes[0]);
           }
-
-          if (this.editedIndex > -1) {
+          if (!this.isAddMode && this.isEditMode) {
             this.$toast.success("Product updated successfully", {
               position: this.position,
               timeout: 6000,
