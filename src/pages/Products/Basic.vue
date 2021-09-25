@@ -28,7 +28,7 @@
                         color="primary"
                         dark
                         class="mb-2"
-                        @click="addPricesForSelectedItem"
+                        @click="addNewProduct"
                         v-bind="attrs"
                         v-on="on"
                       >
@@ -44,71 +44,98 @@
                           <v-row>
                             <v-col cols="12" sm="6" md="4">
                               <v-text-field
+                                name="product name"
                                 v-model="editedItem.name"
                                 label="Name"
+                                v-validate="'required'"
                               ></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-select return-object
+                              <v-select
+                                return-object
                                 v-model="editedItem.gender"
                                 :items="genders"
                                 item-text="Name"
                                 item-value="Name"
                                 label="Gender"
                                 single-line
+                                name="gender"
+                                v-validate="'required'"
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-select return-object
+                              <v-select
+                                return-object
                                 v-model="editedItem.color"
                                 :items="colors"
                                 item-text="Name"
                                 item-value="Name"
                                 label="Color"
                                 single-line
+                                name="color"
+                                v-validate="'required'"
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-select return-object
+                              <v-select
+                                return-object
                                 v-model="editedItem.brand"
                                 :items="brands"
                                 item-text="Name"
                                 item-value="Name"
                                 label="Brand"
                                 single-line
+                                name="brand"
+                                v-validate="'required'"
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                <v-select 
-                                    return-object
-                                    v-model="editedItem.discount"
-                                    :items="discounts"
-                                    item-text="DiscountPercentage"
-                                    item-value="Id"
-                                    label="Discount"
-                                    single-line
+                              <v-select
+                                return-object
+                                v-model="editedItem.discount"
+                                :items="discounts"
+                                item-text="DiscountPercentage"
+                                item-value="Id"
+                                label="Discount"
+                                single-line
+                                name="discount"
+                                v-validate="'required'"
                               ></v-select>
                             </v-col>
-                             <v-col cols="12" sm="6" md="4">
-                                 <v-select return-object
-                                    v-model="editedItem.category"
-                                    :items="categories"
-                                    item-text="Name"
-                                    item-value="Name"
-                                    label="Category"
-                                    single-line
+                            <v-col cols="12" sm="6" md="4">
+                              <v-select
+                                return-object
+                                v-model="editedItem.category"
+                                :items="categories"
+                                item-text="Name"
+                                item-value="Name"
+                                label="Category"
+                                single-line
+                                name="category"
+                                v-validate="'required'"
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
-                              <span class="caption font-weight-bold">Add sizes</span>
+                              <span class="caption font-weight-bold"
+                                >Add sizes</span
+                              >
                             </v-col>
-                             <v-col cols="12" sm="12" md="12">
+                            <v-col cols="12" sm="12" md="12">
                               <v-switch
-                                :label="editedItem.hideSize?'Is Not Applicable':'Is Applicable'"
+                                :label="
+                                  editedItem.hideSize
+                                    ? 'Is Not Applicable'
+                                    : 'Is Applicable'
+                                "
                                 v-model="editedItem.hideSize"
                               ></v-switch>
                             </v-col>
-                            <v-col v-if="!editedItem.hideSize" cols="12" sm="12" md="12">
+                            <v-col
+                              v-if="!editedItem.hideSize"
+                              cols="12"
+                              sm="12"
+                              md="12"
+                            >
                               <v-row align="center">
                                 <v-col
                                   class="d-flex mx-3 my-1 elevation-1 rounded"
@@ -122,9 +149,9 @@
                                       cols="3"
                                     >
                                       <v-label>
-                                        <span class="caption">{{
-                                          sizeOb.Name 
-                                        }}  </span></v-label
+                                        <span class="caption"
+                                          >{{ sizeOb.Name }}
+                                        </span></v-label
                                       >
                                     </v-col>
                                     <v-col class="d-flex pa-0" cols="7">
@@ -138,6 +165,8 @@
                                         v-model="sizeOb.stock"
                                         placeholder="Enter Stock"
                                         class="ma-0 pa-0"
+                                        :name="`${sizeOb.Name.toLowerCase()} stock`"
+                                        v-validate="'required'"
                                       />
                                     </v-col>
                                     <v-col class="d-flex pa-0 ma-0" cols="1">
@@ -158,7 +187,9 @@
                             </v-col>
 
                             <v-col cols="12" sm="12" md="12">
-                              <span class="caption font-weight-bold">Add prices</span>
+                              <span class="caption font-weight-bold"
+                                >Add prices</span
+                              >
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
                               <v-row align="center">
@@ -177,9 +208,9 @@
                                         mdi-cash
                                       </v-icon>
                                       <v-label>
-                                        <span class="caption">{{
-                                          priceOb.code 
-                                        }}  </span></v-label
+                                        <span class="caption"
+                                          >{{ priceOb.code }}
+                                        </span></v-label
                                       >
                                     </v-col>
                                     <v-col class="d-flex pa-0" cols="7">
@@ -193,6 +224,8 @@
                                         v-model="priceOb.price"
                                         placeholder="Enter Price"
                                         class="ma-0 pa-0"
+                                        :name="`${priceOb.code.toLowerCase()} price`"
+                                        v-validate="'required'"
                                       />
                                     </v-col>
                                     <v-col class="d-flex pa-0 ma-0" cols="1">
@@ -211,11 +244,16 @@
                                 </v-col>
                               </v-row>
                             </v-col>
-                             <v-col cols="12" sm="12" md="12">
-                              <span class="caption font-weight-bold">Choose image/images</span>
+                            <v-col cols="12" sm="12" md="12">
+                              <span class="caption font-weight-bold"
+                                >Choose image/images</span
+                              >
                             </v-col>
-                             <v-col  cols="12" sm="12" md="12">
-                                    <file-upload-component @files-updated="updateImage" :imagefiles="editedItem.images"/>
+                            <v-col cols="12" sm="12" md="12">
+                              <file-upload-component
+                                @files-updated="updateImage"
+                                :imagefiles="editedItem.images"
+                              />
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
                               <v-switch
@@ -226,7 +264,27 @@
                           </v-row>
                         </v-container>
                       </v-card-text>
-
+                        <v-col cols=12 v-if="errors && errors.items.length>0">
+                        <v-card class="ma-0">
+                          <v-card-title>
+                            <p class="caption">Some of the product details are missing. Please add them to continue</p>
+                          </v-card-title>
+                          <v-card-text class="px-6 pt-0">
+                            <v-row no-gutters class="typography-widget pb-2">
+                              <v-col cols="5" class="card-dark-grey ml-1" v-for="error in errors.items" :key="error">
+                                          <v-alert
+                                            dense
+                                            outlined
+                                            type="error"
+                                            class="caption error--text" 
+                                          >
+                                            {{error.msg}}
+                                          </v-alert>
+                              </v-col>
+                            </v-row>
+                          </v-card-text>
+                        </v-card>
+                      </v-col>
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="close">
@@ -261,15 +319,17 @@
                   </v-dialog>
                 </v-toolbar>
               </template>
-                <template v-slot:[`item.sizevariants`]='{ item }'>
-                {{sizevariants}}
-                <div v-for="size in item.sizevariants" :key="size.sizeVariantId">
+              <template v-slot:[`item.sizevariants`]="{ item }">
+                <div
+                  v-for="size in item.sizevariants"
+                  :key="size.sizeVariantId"
+                >
                   <v-chip class="mt-1" color="primary" label>
                     {{ `${size.Name} - ${size.stock}` }}
                   </v-chip>
                 </div>
               </template>
-              <template v-slot:[`item.prices`]='{ item }'>
+              <template v-slot:[`item.prices`]="{ item }">
                 <div v-for="price in item.prices" :key="price.id">
                   <v-chip class="mt-1" color="green" label outlined>
                     <v-icon left> mdi-cash </v-icon>
@@ -277,37 +337,40 @@
                   </v-chip>
                 </div>
               </template>
-              
-              <template v-slot:[`item.actions`]='{ item }'>
+
+              <template v-slot:[`item.actions`]="{ item }">
                 <v-icon small class="mr-2" @click="editItem(item)">
                   mdi-pencil
                 </v-icon>
                 <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
               </template>
               <template v-slot:no-data>
-                <v-btn color="primary" @click="initialize"> Reset </v-btn>
+                <v-btn color="primary"> Reset </v-btn>
               </template>
-              <template v-slot:[`item.status`]='{ item }'>
+              <template v-slot:[`item.status`]="{ item }">
                 <v-chip :color="getColor(item.status)" dark>
                   {{ item.status ? "Displayed" : "Hidden" }}
                 </v-chip>
               </template>
               <!-- eslint-disable-next-line -->
-              <template  v-slot:[`item.images`]='{ item }'>
-                    <v-card
-              elevation="24"
-              max-width="40"
-              class="mx-auto"
-    >
-                       <v-carousel height="40" width="40" cycle hide-delimiters  :show-arrows="false">
-      <v-carousel-item
-        v-for="(item,i) in item.images"
-        :key="i"
-       
-      >   
-        <v-img :src="item.fileUrl"  aspect-ratio="1" contain></v-img> </v-carousel-item>
-    </v-carousel>
-                    </v-card>
+              <template v-slot:[`item.images`]="{ item }">
+                <v-card elevation="24" max-width="40" class="mx-auto">
+                  <v-carousel
+                    height="40"
+                    width="40"
+                    cycle
+                    hide-delimiters
+                    :show-arrows="false"
+                  >
+                    <v-carousel-item v-for="(item, i) in item.images" :key="i">
+                      <v-img
+                        :src="item.fileUrl"
+                        aspect-ratio="1"
+                        contain
+                      ></v-img>
+                    </v-carousel-item>
+                  </v-carousel>
+                </v-card>
               </template>
             </v-data-table>
           </v-card>
@@ -331,13 +394,13 @@ import {
   updateProducts,
   getDiscounts,
   getPricesById,
-  getSizesById
+  getSizesById,
 } from "../../apiServices";
 import FileUploadComponent from "../../components/FileUploadComponent.vue";
 import { v4 as uuidv4 } from "uuid";
 export default {
-  components:{
-    FileUploadComponent
+  components: {
+    FileUploadComponent,
   },
   data() {
     return {
@@ -367,7 +430,7 @@ export default {
       dialogDelete: false,
       editedItem: {
         productId: 0,
-        hideSize:false,
+        hideSize: false,
         name: "",
         gender: "",
         color: "",
@@ -375,13 +438,13 @@ export default {
         brand: "",
         discount: "",
         status: 1,
-        images:[],
-        category:"",
+        images: [],
+        category: "",
         prices: [],
       },
       defaultItem: {
         productId: 0,
-        hideSize:false,
+        hideSize: false,
         name: "",
         gender: "Female",
         color: "",
@@ -389,8 +452,8 @@ export default {
         brand: "",
         discount: "",
         status: 0,
-        category:"",
-        images:[],
+        category: "",
+        images: [],
         prices: [],
       },
       genders: [],
@@ -402,47 +465,45 @@ export default {
       position: "top-right",
       countries: [],
       newProductId: "",
-      discounts:[]
+      discounts: [],
     };
   },
   async created() {
     this.discounts = await getDiscounts();
     this.products = await getProducts();
     this.products.forEach(async (product) => {
-      product.gender=JSON.parse(product.gender)
-      product.color=JSON.parse(product.color);
-      product.brand=JSON.parse(product.brand);
-      product.category=JSON.parse(product.category);
-      product.discount=JSON.parse(product.discount);
+      product.gender = JSON.parse(product.gender);
+      product.color = JSON.parse(product.color);
+      product.brand = JSON.parse(product.brand);
+      product.category = JSON.parse(product.category);
+      product.discount = JSON.parse(product.discount);
       /*
           TODO- Fix later Edge case - Discount has issue with object reference 
       */
-      if(product.discount){
-        product.discount = this.discounts.find(dis=>dis.Id==product.discount.Id);
+      if (product.discount) {
+        product.discount = this.discounts.find(
+          (dis) => dis.Id == product.discount.Id
+        );
       }
       let response1 = await getPricesById(product.id);
       let prices = response1[0].prices;
       let response2 = await getSizesById(product.id);
       let sizevariants = response2[0].sizevariants;
 
-      if(prices)
-        product.prices=JSON.parse(prices);
+      if (prices) product.prices = JSON.parse(prices);
 
-      if(sizevariants)
-        product.sizevariants=JSON.parse(sizevariants);
+      if (sizevariants) product.sizevariants = JSON.parse(sizevariants);
 
-      if(product.images)
-        product.images=JSON.parse(product.images);
-     
+      if (product.images) product.images = JSON.parse(product.images);
     });
-    
+
     this.genders = await getGenders();
     this.categories = await getCategories();
     this.sizes = await getSizes();
     this.brands = await getBrands();
     this.colors = await getColors();
     this.countries = await getCountries();
-    
+
     this.addPricesForSelectedItem();
     this.addSizesForSelectedItem();
     this.newProductId = uuidv4();
@@ -463,7 +524,11 @@ export default {
     },
   },
   methods: {
-    updateImage(e){
+    addNewProduct() {
+      this.addSizesForSelectedItem();
+      this.addPricesForSelectedItem();
+    },
+    updateImage(e) {
       this.editedItem.images = e;
       console.log(this.editedItem);
     },
@@ -474,7 +539,7 @@ export default {
           this.editedItem.prices.push({
             price: "",
             code: this.countries[i].Code,
-            Id:this.countries[i].Id,
+            Id: this.countries[i].Id,
             countryId: this.countries[i].Id,
           });
         }
@@ -491,7 +556,7 @@ export default {
           let payload = {
             SizeId: this.sizes[i].Id,
             Name: this.sizes[i].Name,
-            Id:this.sizes[i].Id,
+            Id: this.sizes[i].Id,
             stock: "",
           };
           this.editedItem.sizevariants.push(payload);
@@ -534,47 +599,52 @@ export default {
         this.editedIndex = -1;
       });
     },
-
+    validateNewProduct() {},
     async save() {
-      if(this.editedItem.hideSize){
+      this.$validator.validate().then(async (valid) => {
+        console.log(this.errors);
+        if (valid) {
+          if (this.editedItem.hideSize) {
             this.editedItem.sizevariants = [];
             this.editedItem.sizevariants.push(this.sizes[0]);
-      }
+          }
 
-      if (this.editedIndex > -1) {
-        this.$toast.success("Product updated successfully", {
-          position: this.position,
-          timeout: 6000,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          draggablePercent: 0.6,
-          showCloseButtonOnHover: false,
-          hideProgressBar: true,
-          closeButton: "button",
-          icon: true,
-        });
+          if (this.editedIndex > -1) {
+            this.$toast.success("Product updated successfully", {
+              position: this.position,
+              timeout: 6000,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: false,
+              hideProgressBar: true,
+              closeButton: "button",
+              icon: true,
+            });
 
-        await updateProducts(this.editedItem);
-        Object.assign(this.products[this.editedIndex], this.editedItem);
-      } else {
-        console.log(this.editedItem);
-        await addProducts(this.editedItem);
-        this.products.unshift(this.editedItem);
-        this.$toast.success("Product added successfully", {
-          position: this.position,
-          timeout: 6000,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          draggablePercent: 0.6,
-          showCloseButtonOnHover: false,
-          hideProgressBar: true,
-          closeButton: "button",
-          icon: true,
-        });
-      }
-      this.close();
+            await updateProducts(this.editedItem);
+            Object.assign(this.products[this.editedIndex], this.editedItem);
+          } else {
+            console.log(this.editedItem);
+            await addProducts(this.editedItem);
+            this.products.unshift(this.editedItem);
+            this.$toast.success("Product added successfully", {
+              position: this.position,
+              timeout: 6000,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: false,
+              hideProgressBar: true,
+              closeButton: "button",
+              icon: true,
+            });
+          }
+          this.close();
+        }
+      });
     },
     getColor(status) {
       if (status) return "green";

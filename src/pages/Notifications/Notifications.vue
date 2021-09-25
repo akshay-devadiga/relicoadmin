@@ -6,24 +6,12 @@
       <v-row>
         <v-col cols="12">
           <v-card class="employee-list mb-1 red">
-            <!-- <v-card-title class="pa-6 pb-3">
-              <p>Employee List</p>
-              <v-spacer></v-spacer>
-              <v-text-field
-                v-model="mock.employeeTable.search"
-                append-icon="mdi-magnify"
-                label="Search"
-                clearable
-                single-line
-                hide-details
-              ></v-text-field>
-            </v-card-title> -->
               <v-data-table
       :headers="headers"
       :items="customers"
       class="elevation-1"
     >
-        <template v-slot:item.EmailVerified="{ item }">
+        <template v-slot:item="{ item }">
         <v-chip
           :color="getColor(item.EmailVerified)"
           dark
