@@ -16,7 +16,7 @@ import Login from "@/pages/Login/Login";
 
 Vue.use(Router);
 
-export default new Router({
+let router = new Router({
   mode:'history',
   routes: [
     {
@@ -81,3 +81,14 @@ export default new Router({
     }
   ],
 });
+
+router.beforeEach((to, from,next) => {
+  let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  console.log(requiresAuth);
+  next();
+  // if (!requiresAuth) next('login')
+  // else if (requiresAuth) next('dashboard')
+  // else next();
+})
+
+export default router;

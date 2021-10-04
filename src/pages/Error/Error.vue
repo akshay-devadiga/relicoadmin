@@ -2,8 +2,8 @@
   <v-app>
     <v-container fluid class="error-page">
       <v-row class="logo-wrapper">
-        <v-img src="@/assets/logo.png" contain width="62" height="48"></v-img>
-        <span class="logo-title">Vue Material Admin</span>
+        <v-img src="@/assets/logo.svg" contain width="62" height="48"></v-img>
+        <span class="logo-title">Relico Admin</span>
       </v-row>
       <v-row class="d-flex justify-center">
         <v-col cols="8">

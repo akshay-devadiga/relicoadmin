@@ -4,8 +4,14 @@
       <v-row no-gutters>
         <v-col cols="7" class="main-part d-none d-md-none d-lg-flex">
           <div class="d-flex">
-            <v-img src="@/assets/logo.png" height="200" width="350" contain></v-img>
+            <v-img src="@/assets/logo.svg" height="200" width="350" contain></v-img>
+            
+              <v-badge
+            color="green"
+            content="BETA"
+          >
             <p>Relico</p>
+          </v-badge>
           </div>
         </v-col>
         <v-col cols="12" lg="5" class="login-part d-flex align-center justify-center">
@@ -15,7 +21,7 @@
                     <v-form>
                       <v-container>
                         <v-row class="flex-column">
-                          <v-col>
+                          <!-- <v-col>
                             <p class="login-slogan title text-center font-weight-medium my-10">Login to continue</p>
                             <v-btn height="45" block color="white" elevation="0" class="google text-capitalize">
                               <v-img src="@/assets/google.svg" max-width="30" class="mr-4"></v-img>
@@ -25,13 +31,13 @@
                             <v-divider></v-divider>
                             <span class="px-5"> or </span>
                             <v-divider></v-divider>
-                          </v-col>
+                          </v-col> -->
                           <v-form>
                             <v-col>
                               <v-text-field
                                   v-model="email"
                                   :rules="emailRules"
-                                  value="admin@flatlogic.com"
+                                  value="admin@nba"
                                   label="Email Address"
                                   required
                               ></v-text-field>
@@ -54,7 +60,7 @@
                                   @click="login"
                               >
                                 Login</v-btn>
-                              <v-btn large text class="text-capitalize primary--text">Forget Password</v-btn>
+                              <!-- <v-btn large text class="text-capitalize primary--text">Forget Password</v-btn> -->
                             </v-col>
                           </v-form>
                         </v-row>
@@ -64,7 +70,7 @@
             </v-col>
             <v-col cols="12" class="d-flex justify-center">
               <v-footer>
-                <div class="primary--text">© 2021 <a href="https://flatlogic.com/" class="text-decoration-none">Relico Ecommerce</a>, LLC. All rights reserved.</div>
+                <div class="primary--text">© 2021 <a class="text-decoration-none">Relico Ecommerce</a></div>
               </v-footer>
             </v-col>
           </v-row>
@@ -80,15 +86,14 @@
     name: 'Login',
     data() {
       return {
-        email: 'admin@flatlogic.com',
+        email: '',
         emailRules: [
           v => !!v || 'E-mail is required',
           v => /.+@.+/.test(v) || 'E-mail must be valid',
         ],
-        createFullName: 'John Smith',
-        createEmail: 'john@flatlogic.com',
-        createPassword: '123456',
-        password: '123456',
+        adminEmail: 'admin@nba-store.in',
+        adminpassword: 'nbA@293_',
+        password: '',
         passRules: [
           v => !!v || 'Password is required',
           v => v.length >= 6 || 'Min 6 characters'
@@ -97,13 +102,17 @@
     },
     methods: {
       login(){
-        window.localStorage.setItem('authenticated', true);
-        this.$router.push('/dashboard');
+        if(this.password==this.adminpassword && this.email==this.adminEmail){
+           window.localStorage.setItem('authenticated', true);
+           this.$router.push('/products');
+        }
       }
     },
     created() {
       if (window.localStorage.getItem('authenticated') === 'true') {
-        this.$router.push('/dashboard');
+        this.$router.push('/products');
+      }else{
+        this.$router.push('/login');
       }
     }
   }

@@ -12,13 +12,13 @@
               <v-col cols="12" class="card-dark-grey">
                 <h5>Step I: <span class="subtitle-1 my-3">Go to  <a style="text-decoration:none" href="https://dashboard.stripe.com/">Stripe Dashboard</a> </span></h5>
                 <h5>Step II:  <span class="subtitle-1 my-3">Click on payments</span></h5>
-                <v-img :src="step1" class="elevation-1 mb-5"></v-img>
+                <v-img :src="step1"  :lazy-src="step1" class="elevation-1 mb-5"></v-img>
                 <h5>Step III: <span class="subtitle-1 my-3">These are list of all the transactions. Click on succeeded to get details about the order for which the payement succeded</span></h5>
-                 <v-img :src="step2" class="elevation-1 mb-5"></v-img>
+                 <v-img :src="step2"  :lazy-src="step2" class="elevation-1 mb-5"></v-img>
                 <h5>Step IV: <span class="subtitle-1 my-3">You can get more options to Refund,Send receipt.</span></h5>
-                  <v-img :src="step3" class="elevation-1 mb-5"></v-img>
+                  <v-img :src="step3"  :lazy-src="step3" class="elevation-1 mb-5"></v-img>
                            <h5>Step V: <span class="subtitle-1 my-3">Click view customer to get address details or Click on refund payement to refund or Click on Send receipt to send invoice to customer</span></h5>
-                      <v-img :src="step4" class="elevation-1 mb-5"></v-img>
+                      <v-img :src="step4"  :lazy-src="step4" class="elevation-1 mb-5"></v-img>
               </v-col>
             </v-row>
           </v-card-text>

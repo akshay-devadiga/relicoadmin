@@ -5,6 +5,13 @@
 <script>
   export default {
     name: 'App',
+     created() {
+      if (window.localStorage.getItem('authenticated') === 'true') {
+        this.$router.push('/products');
+      }else{
+        this.$router.push('/login');
+      }
+    }
   };
 </script>
 
