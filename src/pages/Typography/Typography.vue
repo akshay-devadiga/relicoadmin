@@ -2,85 +2,23 @@
   <v-container fluid class="typography-page">
     <h1 class="page-title mt-10 mb-6">Orders</h1>
     <v-row>
-        <v-data-table
-      :headers="headers"
-      :items="orders"
-      class="elevation-1"
-    />
-      <v-col lg=6 cols=12>
+      <v-col lg=12 cols=12>
         <v-card class="mx-1 mb-1">
           <v-card-title class="pa-6 pb-3">
-            <p>Headings</p>
+            <p>To get orders list follow below steps</p>
           </v-card-title>
           <v-card-text class="pa-6 pt-0">
-            <v-row no-gutters class="typography-widget pb-6">
+            <v-row no-gutters class=" pb-6">
               <v-col cols="12" class="card-dark-grey">
-                <h1>h1. Heading</h1>
-                <h2>h2. Heading</h2>
-                <h3>h3. Heading</h3>
-                <h4>h4. Heading</h4>
-                <h5>h5. Heading</h5>
-                <h6>h6. Heading</h6>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col lg=6 cols=12>
-        <v-card class="mx-1 mb-1">
-          <v-card-title class="pa-6 pb-3">
-            <p>Typography Colors</p>
-          </v-card-title>
-          <v-card-text class="pa-6 pt-0">
-            <v-row no-gutters class="typography-widget pb-6">
-              <v-col cols="12" class="card-dark-grey">
-                <h1 class="primary--text">h1. Heading</h1>
-                <h2 class="success--text">h2. Heading</h2>
-                <h3 class="secondary--text">h3. Heading</h3>
-                <h4 class="warning--text">h4. Heading</h4>
-                <h5 class="primary--text">h5. Heading</h5>
-                <h6 class="info--text">h6. Heading</h6>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col lg=6 cols=12>
-        <v-card class="mx-1 mb-1">
-          <v-card-title class="pa-6 pb-3">
-            <p>Basic Text Settings</p>
-          </v-card-title>
-          <v-card-text class="pa-6 pt-0">
-            <v-row no-gutters class="typography-widget pb-6">
-              <v-col cols="12" class="card-dark-grey">
-                <p class="font-weight-regular">Basic text</p>
-                <p class="font-weight-light">Basic light text</p>
-                <p class="font-weight-medium">Basic medium text</p>
-                <p class="font-weight-bold">Basic bold text</p>
-                <p class="text-uppercase">Basic Uppercase Text</p>
-                <p class="text-lowercase">Basic Lowercase Text</p>
-                <p class="text-capitalize">Basic Capitalized Text</p>
-                <p class="font-italic">Basic Cursive Text</p>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col lg=6 cols=12>
-        <v-card class="mx-1 mb-1">
-          <v-card-title class="pa-6 pb-3">
-            <p>Text Size</p>
-          </v-card-title>
-          <v-card-text class="pa-6 pt-0">
-            <v-row no-gutters class="typography-widget pb-6">
-              <v-col cols="12" class="card-dark-grey">
-                <p class="text-caption">Heading Typography SM Font Size</p>
-                <p class="text-body-1">Heading Typography Regular Font Size</p>
-                <p class="text-h5">Heading Typography MD Font Size</p>
-                <p class="text-h4">Heading Typography XL Font Size</p>
-                <p class="text-h3">Heading Typography XXL Font Size</p>
+                <h5>Step I: <span class="subtitle-1 my-3">Go to  <a style="text-decoration:none" href="https://dashboard.stripe.com/">Stripe Dashboard</a> </span></h5>
+                <h5>Step II:  <span class="subtitle-1 my-3">Click on payments</span></h5>
+                <v-img :src="step1" class="elevation-1 mb-5"></v-img>
+                <h5>Step III: <span class="subtitle-1 my-3">These are list of all the transactions. Click on succeeded to get details about the order for which the payement succeded</span></h5>
+                 <v-img :src="step2" class="elevation-1 mb-5"></v-img>
+                <h5>Step IV: <span class="subtitle-1 my-3">You can get more options to Refund,Send receipt.</span></h5>
+                  <v-img :src="step3" class="elevation-1 mb-5"></v-img>
+                           <h5>Step V: <span class="subtitle-1 my-3">Click view customer to get address details or Click on refund payement to refund or Click on Send receipt to send invoice to customer</span></h5>
+                      <v-img :src="step4" class="elevation-1 mb-5"></v-img>
               </v-col>
             </v-row>
           </v-card-text>
@@ -106,6 +44,10 @@ export default {
         { text: 'Price', value: 'price' }
       ],
       orders:[],
+      step1: "./images/step1.png",
+      step2: "./images/step2.png",
+      step3: "./images/step3.png",
+      step4: "./images/step4.png"
     }
   },
   /*

@@ -117,10 +117,10 @@
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
                               <span class="caption font-weight-bold"
-                                >Add sizes</span
+                                >{{isEditMode? 'Update sizes':'Add sizes'}}</span
                               >
                             </v-col>
-                            <v-col cols="12" sm="12" md="12">
+                            <v-col cols="12" sm="12" md="12" v-show="!isEditMode">
                               <v-switch
                                 :label="
                                   editedItem.hideSize
@@ -169,7 +169,7 @@
                                         v-validate="'required'"
                                       />
                                     </v-col>
-                                    <v-col class="d-flex pa-0 ma-0" cols="1">
+                                    <v-col class="d-flex pa-0 ma-0" cols="1"  v-if="!isEditMode">
                                       <v-btn
                                         class="ma-0 pa-0 remove-price"
                                         color="error"
@@ -188,7 +188,7 @@
 
                             <v-col cols="12" sm="12" md="12">
                               <span class="caption font-weight-bold"
-                                >Add prices</span
+                                >{{isEditMode? 'Update prices':'Add prices'}}</span
                               >
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
@@ -228,7 +228,7 @@
                                         v-validate="'required'"
                                       />
                                     </v-col>
-                                    <v-col class="d-flex pa-0 ma-0" cols="1">
+                                    <v-col class="d-flex pa-0 ma-0" cols="1" v-if="!isEditMode">
                                       <v-btn
                                         class="ma-0 pa-0 remove-price"
                                         color="error"

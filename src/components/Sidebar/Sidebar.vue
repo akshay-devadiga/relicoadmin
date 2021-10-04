@@ -102,10 +102,10 @@ import {mapActions, mapState} from 'vuex'
     data(){
       return {
         items: [
-          { title: 'Dashboard', icon: 'mdi-chart-tree', link: '/dashboard' },
+          // { title: 'Dashboard', icon: 'mdi-chart-tree', link: '/dashboard' },
           { title: 'Orders', icon: 'mdi-cart-outline', link: '/typography' },
           { title: 'Products', icon: 'mdi-hanger', link: '/products' },
-          { title: 'Customers', icon: 'mdi-account-group', link: '/notifications' }
+          // { title: 'Customers', icon: 'mdi-account-group', link: '/notifications' }
         ],
         sidebarWidth: 240,
         sidebarMinWidth: 96
