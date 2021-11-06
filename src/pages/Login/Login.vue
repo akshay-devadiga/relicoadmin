@@ -4,13 +4,15 @@
       <v-row no-gutters>
         <v-col cols="7" class="main-part d-none d-md-none d-lg-flex">
           <div class="d-flex">
-            <v-img src="@/assets/logo.svg" height="200" width="350" contain></v-img>
+            <!-- @/assets/logo.svg -->
+            <v-img src="https://blog.logomyway.com/wp-content/uploads/2017/01/nba-logo-1.jpg" height="200" width="350" contain></v-img>
             
               <v-badge
             color="green"
             content="BETA"
           >
-            <p>Relico</p>
+            <!-- <p>Relico</p> -->
+               <p class="text-h3">TheJerseyStore</p>
           </v-badge>
           </div>
         </v-col>
@@ -91,8 +93,8 @@
           v => !!v || 'E-mail is required',
           v => /.+@.+/.test(v) || 'E-mail must be valid',
         ],
-        adminEmail: 'admin@nba-store.in',
-        adminpassword: 'nbA@293_',
+        adminEmail: 'admin@thejerseystore.com',
+        adminpassword: 'theJ_str@293_',
         password: '',
         passRules: [
           v => !!v || 'Password is required',

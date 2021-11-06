@@ -37,8 +37,8 @@ let router = new Router({
         meta: { requiresAuth: true }
       },
       {
-        path: 'typography',
-        name: 'Typography',
+        path: 'orders',
+        name: 'Orders',
         component: Typography,
         meta: { requiresAuth: true }
       },

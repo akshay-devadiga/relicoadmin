@@ -13,7 +13,7 @@
         <v-icon style="font-size: 28px">mdi-menu</v-icon>
       </template>
     </v-btn>
-    <v-toolbar-title>Relico Admin</v-toolbar-title>
+    <v-toolbar-title>TheJerseyStore Admin</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-menu
       min-width="180"

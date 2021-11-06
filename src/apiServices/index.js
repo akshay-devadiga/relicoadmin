@@ -144,3 +144,12 @@ export const uploadFile = async (files) => {
   }
 }
 
+
+export const deleteProduct = async (productId) => {
+  try {
+    const response = await axios.put(`/products/${productId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

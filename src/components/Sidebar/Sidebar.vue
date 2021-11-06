@@ -103,7 +103,7 @@ import {mapActions, mapState} from 'vuex'
       return {
         items: [
           // { title: 'Dashboard', icon: 'mdi-chart-tree', link: '/dashboard' },
-          { title: 'Orders', icon: 'mdi-cart-outline', link: '/typography' },
+          { title: 'Orders', icon: 'mdi-cart-outline', link: '/orders' },
           { title: 'Products', icon: 'mdi-hanger', link: '/products' },
           // { title: 'Customers', icon: 'mdi-account-group', link: '/notifications' }
         ],

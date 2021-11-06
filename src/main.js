@@ -8,6 +8,8 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 // VeeValidate
 import VeeValidate from 'vee-validate'
+import VueLazyload from 'vue-lazyload'
+Vue.use(VueLazyload)
 Vue.use(VeeValidate)
 Vue.use(Toast);
 

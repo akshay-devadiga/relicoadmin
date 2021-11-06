@@ -116,11 +116,16 @@
                               ></v-select>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
-                              <span class="caption font-weight-bold"
-                                >{{isEditMode? 'Update sizes':'Add sizes'}}</span
-                              >
+                              <span class="caption font-weight-bold">{{
+                                isEditMode ? "Update sizes" : "Add sizes"
+                              }}</span>
                             </v-col>
-                            <v-col cols="12" sm="12" md="12" v-show="!isEditMode">
+                            <v-col
+                              cols="12"
+                              sm="12"
+                              md="12"
+                              v-show="!isEditMode"
+                            >
                               <v-switch
                                 :label="
                                   editedItem.hideSize
@@ -165,11 +170,17 @@
                                         v-model="sizeOb.stock"
                                         placeholder="Enter Stock"
                                         class="ma-0 pa-0"
-                                        :name="`${sizeOb.Name.toLowerCase()} stock`"
+                                        :name="
+                                          `${sizeOb.Name.toLowerCase()} stock`
+                                        "
                                         v-validate="'required'"
                                       />
                                     </v-col>
-                                    <v-col class="d-flex pa-0 ma-0" cols="1"  v-if="!isEditMode">
+                                    <v-col
+                                      class="d-flex pa-0 ma-0"
+                                      cols="1"
+                                      v-if="!isEditMode"
+                                    >
                                       <v-btn
                                         class="ma-0 pa-0 remove-price"
                                         color="error"
@@ -187,9 +198,9 @@
                             </v-col>
 
                             <v-col cols="12" sm="12" md="12">
-                              <span class="caption font-weight-bold"
-                                >{{isEditMode? 'Update prices':'Add prices'}}</span
-                              >
+                              <span class="caption font-weight-bold">{{
+                                isEditMode ? "Update prices" : "Add prices"
+                              }}</span>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
                               <v-row align="center">
@@ -224,11 +235,17 @@
                                         v-model="priceOb.price"
                                         placeholder="Enter Price"
                                         class="ma-0 pa-0"
-                                        :name="`${priceOb.code.toLowerCase()} price`"
+                                        :name="
+                                          `${priceOb.code.toLowerCase()} price`
+                                        "
                                         v-validate="'required'"
                                       />
                                     </v-col>
-                                    <v-col class="d-flex pa-0 ma-0" cols="1" v-if="!isEditMode">
+                                    <v-col
+                                      class="d-flex pa-0 ma-0"
+                                      cols="1"
+                                      v-if="!isEditMode"
+                                    >
                                       <v-btn
                                         class="ma-0 pa-0 remove-price"
                                         color="error"
@@ -250,10 +267,24 @@
                               >
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
-                              <file-upload-component
+                              <!-- <file-upload-component
                                 @files-updated="updateImage"
                                 :imagefiles="editedItem.images"
-                              />
+                              /> -->
+                              <vue-upload-multiple-image
+                                @upload-success="uploadImageSuccess"
+                                @before-remove="beforeRemove"
+                                @edit-image="editImage"
+                                :data-images="editedItem.images"
+                                dragText="Drag & Drop files"
+                                browseText="Or Browse"
+                                primaryText="Default"
+                                markIsPrimaryText="Set as default"
+                                popupText="This image will be displayed as default"
+                                dropText="Drop your file here..."
+                                maxImage="3"
+                                :showEdit="false"
+                              ></vue-upload-multiple-image>
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
                               <v-switch
@@ -264,22 +295,30 @@
                           </v-row>
                         </v-container>
                       </v-card-text>
-                        <v-col cols=12 v-if="errors && errors.items.length>0">
+                      <v-col cols="12" v-if="errors && errors.items.length > 0">
                         <v-card class="ma-0">
                           <v-card-title>
-                            <p class="caption">Some of the product details are missing. Please add them to continue</p>
+                            <p class="caption">
+                              Some of the product details are missing. Please
+                              add them to continue
+                            </p>
                           </v-card-title>
                           <v-card-text class="px-6 pt-0">
                             <v-row no-gutters class="typography-widget pb-2">
-                              <v-col cols="5" class="card-dark-grey ml-1" v-for="error in errors.items" :key="error">
-                                          <v-alert
-                                            dense
-                                            outlined
-                                            type="error"
-                                            class="caption error--text" 
-                                          >
-                                            {{error.msg}}
-                                          </v-alert>
+                              <v-col
+                                cols="5"
+                                class="card-dark-grey ml-1"
+                                v-for="error in errors.items"
+                                :key="error"
+                              >
+                                <v-alert
+                                  dense
+                                  outlined
+                                  type="error"
+                                  class="caption error--text"
+                                >
+                                  {{ error.msg }}
+                                </v-alert>
                               </v-col>
                             </v-row>
                           </v-card-text>
@@ -395,12 +434,15 @@ import {
   getDiscounts,
   getPricesById,
   getSizesById,
+  deleteProduct,
 } from "../../apiServices";
-import FileUploadComponent from "../../components/FileUploadComponent.vue";
+//import FileUploadComponent from "../../components/FileUploadComponent.vue";
+import VueUploadMultipleImage from "vue-upload-multiple-image";
 import { v4 as uuidv4 } from "uuid";
 export default {
   components: {
-    FileUploadComponent,
+    //FileUploadComponent,
+    VueUploadMultipleImage,
   },
   data() {
     return {
@@ -466,8 +508,8 @@ export default {
       countries: [],
       newProductId: "",
       discounts: [],
-      isEditMode:false,
-      isAddMode:false
+      isEditMode: false,
+      isAddMode: false,
     };
   },
   async created() {
@@ -527,8 +569,8 @@ export default {
   },
   methods: {
     addNewProduct() {
-      this.isEditMode=false;
-      this.isAddMode=true;
+      this.isEditMode = false;
+      this.isAddMode = true;
       this.addSizesForSelectedItem();
       this.addPricesForSelectedItem();
     },
@@ -572,8 +614,8 @@ export default {
       this.editedItem.sizevariants.splice(this.editedIndex, 1);
     },
     editItem(item) {
-      this.isEditMode=true;
-      this.isAddMode=false;
+      this.isEditMode = true;
+      this.isAddMode = false;
       this.editedIndex = this.products.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
@@ -585,7 +627,8 @@ export default {
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
+    async deleteItemConfirm() {
+      await deleteProduct(this.editedItem.productId);
       this.products.splice(this.editedIndex, 1);
       this.closeDelete();
     },
@@ -655,8 +698,35 @@ export default {
       if (status) return "green";
       else return "red";
     },
+    uploadImageSuccess(formData, index, fileList) {
+      console.log("data", formData, index, fileList);
+      // Upload image api
+      // axios.post('http://your-url-upload', formData).then(response => {
+      //   console.log(response)
+      // })
+    },
+    beforeRemove(index, done, fileList) {
+      console.log("index", index, fileList);
+      var r = confirm("remove image");
+      if (r == true) {
+        done();
+      }
+    },
+    editImage(formData, index, fileList) {
+      console.log("edit data", formData, index, fileList);
+    },
   },
 };
 </script>
 
-<style src="./Basic.scss" lang="scss"/>
+<style src="./Basic.scss" lang="scss" />
+
+<style lang="scss" scoped>
+::v-deep .image-primary{
+    display: none !important;
+}
+
+::v-deep .image-bottom-left{
+    display: none !important;
+}
+</style>
