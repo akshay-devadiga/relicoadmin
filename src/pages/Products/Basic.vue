@@ -271,10 +271,10 @@
                                 @files-updated="updateImage"
                                 :imagefiles="editedItem.images"
                               /> -->
+                              {{editedItem.images}}
                               <vue-upload-multiple-image
                                 @upload-success="uploadImageSuccess"
                                 @before-remove="beforeRemove"
-                                @edit-image="editImage"
                                 :data-images="editedItem.images"
                                 dragText="Drag & Drop files"
                                 browseText="Or Browse"
@@ -282,7 +282,7 @@
                                 markIsPrimaryText="Set as default"
                                 popupText="This image will be displayed as default"
                                 dropText="Drop your file here..."
-                                maxImage="3"
+                                :maxImage="3"
                                 :showEdit="false"
                               ></vue-upload-multiple-image>
                             </v-col>
@@ -391,6 +391,7 @@
                   {{ item.status ? "Displayed" : "Hidden" }}
                 </v-chip>
               </template>
+            
               <!-- eslint-disable-next-line -->
               <template v-slot:[`item.images`]="{ item }">
                 <v-card elevation="24" max-width="40" class="mx-auto">
@@ -403,7 +404,7 @@
                   >
                     <v-carousel-item v-for="(item, i) in item.images" :key="i">
                       <v-img
-                        :src="item.fileUrl"
+                        :src="item.path"
                         aspect-ratio="1"
                         contain
                       ></v-img>
@@ -435,9 +436,11 @@ import {
   getPricesById,
   getSizesById,
   deleteProduct,
+  uploadFile,
+  removeFile
 } from "../../apiServices";
 //import FileUploadComponent from "../../components/FileUploadComponent.vue";
-import VueUploadMultipleImage from "vue-upload-multiple-image";
+import VueUploadMultipleImage from "../../CommonComponents/FileUploadComponent.vue";
 import { v4 as uuidv4 } from "uuid";
 export default {
   components: {
@@ -538,7 +541,11 @@ export default {
 
       if (sizevariants) product.sizevariants = JSON.parse(sizevariants);
 
-      if (product.images) product.images = JSON.parse(product.images);
+      if (product.images)
+      {
+          product.images = JSON.parse(product.images);
+      }
+      
     });
 
     this.genders = await getGenders();
@@ -698,23 +705,48 @@ export default {
       if (status) return "green";
       else return "red";
     },
-    uploadImageSuccess(formData, index, fileList) {
+    async uploadImageSuccess(formData, index, fileList) {
       console.log("data", formData, index, fileList);
       // Upload image api
       // axios.post('http://your-url-upload', formData).then(response => {
       //   console.log(response)
       // })
+      // let files = await this.gatherFormData(formData);
+      let response = await uploadFile(formData);
+      response.index=index;
+      console.log(response,"response");
+      this.editedItem.images.push(response);
+      // Add image from folder
+      // Update the file url object - editItemObject
     },
-    beforeRemove(index, done, fileList) {
-      console.log("index", index, fileList);
+    //eslint-disable-next-line
+    async beforeRemove(index, done, fileList) {
       var r = confirm("remove image");
       if (r == true) {
         done();
+        //eslint-disable-next-line
+         let productImages = this.editedItem.images;
+         let imageToBeRemoved = productImages.find(imageItem=>imageItem.index == index);
+         const actualIndex = productImages.indexOf(imageToBeRemoved);
+          if (actualIndex > -1) {
+            productImages.splice(actualIndex, 1);
+          }
+         this.editedItem.images = productImages;
+         await removeFile(imageToBeRemoved.filename);
+               this.$toast.success("Image removed successfully", {
+              position: this.position,
+              timeout: 6000,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: false,
+              hideProgressBar: true,
+              closeButton: "button",
+              icon: true,
+            });
       }
-    },
-    editImage(formData, index, fileList) {
-      console.log("edit data", formData, index, fileList);
-    },
+    }   
   },
 };
 </script>

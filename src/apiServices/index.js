@@ -144,6 +144,14 @@ export const uploadFile = async (files) => {
   }
 }
 
+export const removeFile = async (fileName) => {
+  try {
+    const response = await axios.post(`/removeFile`,{fileName});
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export const deleteProduct = async (productId) => {
   try {
