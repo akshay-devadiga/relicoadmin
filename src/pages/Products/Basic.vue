@@ -102,6 +102,15 @@
                                 v-validate="'required'"
                               ></v-select>
                             </v-col>
+                                  <v-col cols="12" >
+                              <v-textarea
+                                 v-model="editedItem.description"
+                                label="Description text"
+                            ></v-textarea>
+                            </v-col>
+
+
+                              
                             <v-col cols="12" sm="6" md="4">
                               <v-select
                                 return-object
@@ -271,7 +280,6 @@
                                 @files-updated="updateImage"
                                 :imagefiles="editedItem.images"
                               /> -->
-                              {{editedItem.images}}
                               <vue-upload-multiple-image
                                 @upload-success="uploadImageSuccess"
                                 @before-remove="beforeRemove"
@@ -391,7 +399,7 @@
                   {{ item.status ? "Displayed" : "Hidden" }}
                 </v-chip>
               </template>
-            
+
               <!-- eslint-disable-next-line -->
               <template v-slot:[`item.images`]="{ item }">
                 <v-card elevation="24" max-width="40" class="mx-auto">
@@ -403,11 +411,7 @@
                     :show-arrows="false"
                   >
                     <v-carousel-item v-for="(item, i) in item.images" :key="i">
-                      <v-img
-                        :src="item.path"
-                        aspect-ratio="1"
-                        contain
-                      ></v-img>
+                      <v-img :src="item.path" aspect-ratio="1" contain></v-img>
                     </v-carousel-item>
                   </v-carousel>
                 </v-card>
@@ -437,11 +441,10 @@ import {
   getSizesById,
   deleteProduct,
   uploadFile,
-  removeFile
+  removeFile,
 } from "../../apiServices";
 //import FileUploadComponent from "../../components/FileUploadComponent.vue";
 import VueUploadMultipleImage from "../../CommonComponents/FileUploadComponent.vue";
-import { v4 as uuidv4 } from "uuid";
 export default {
   components: {
     //FileUploadComponent,
@@ -486,6 +489,7 @@ export default {
         images: [],
         category: "",
         prices: [],
+        description:""
       },
       defaultItem: {
         productId: 0,
@@ -500,6 +504,7 @@ export default {
         category: "",
         images: [],
         prices: [],
+        description:"This shirt is perfect for the gym, a casual day, or an intense workout. Made of cotton, this shirt will keep you cool and dry. It has a loose, boxy fit that's flattering and doesn't hug your body too tightly. With a crew neckline and short sleeves, this shirt is perfect for a variety of outfits."
       },
       genders: [],
       categories: [],
@@ -509,7 +514,6 @@ export default {
       search: "",
       position: "top-right",
       countries: [],
-      newProductId: "",
       discounts: [],
       isEditMode: false,
       isAddMode: false,
@@ -517,47 +521,13 @@ export default {
   },
   async created() {
     this.discounts = await getDiscounts();
-    this.products = await getProducts();
-    this.products.forEach(async (product) => {
-      product.gender = JSON.parse(product.gender);
-      product.color = JSON.parse(product.color);
-      product.brand = JSON.parse(product.brand);
-      product.category = JSON.parse(product.category);
-      product.discount = JSON.parse(product.discount);
-      /*
-          TODO- Fix later Edge case - Discount has issue with object reference 
-      */
-      if (product.discount) {
-        product.discount = this.discounts.find(
-          (dis) => dis.Id == product.discount.Id
-        );
-      }
-      let response1 = await getPricesById(product.id);
-      let prices = response1[0].prices;
-      let response2 = await getSizesById(product.id);
-      let sizevariants = response2[0].sizevariants;
-
-      if (prices) product.prices = JSON.parse(prices);
-
-      if (sizevariants) product.sizevariants = JSON.parse(sizevariants);
-
-      if (product.images)
-      {
-          product.images = JSON.parse(product.images);
-      }
-      
-    });
-
     this.genders = await getGenders();
     this.categories = await getCategories();
     this.sizes = await getSizes();
     this.brands = await getBrands();
     this.colors = await getColors();
     this.countries = await getCountries();
-
-    this.addPricesForSelectedItem();
-    this.addSizesForSelectedItem();
-    this.newProductId = uuidv4();
+    await this.processProducts();
   },
   computed: {
     formTitle() {
@@ -575,6 +545,38 @@ export default {
     },
   },
   methods: {
+    async processProducts() {
+      this.products = await getProducts();
+      this.products.forEach(async (product) => {
+        product.gender = JSON.parse(product.gender);
+        product.color = JSON.parse(product.color);
+        product.brand = JSON.parse(product.brand);
+        product.category = JSON.parse(product.category);
+        product.discount = JSON.parse(product.discount);
+        /*
+          TODO- Fix later Edge case - Discount has issue with object reference 
+      */
+        if (product.discount) {
+          product.discount = this.discounts.find(
+            (dis) => dis.Id == product.discount.Id
+          );
+        }
+        let response1 = await getPricesById(product.id);
+        let prices = response1[0].prices;
+        let response2 = await getSizesById(product.id);
+        let sizevariants = response2[0].sizevariants;
+
+        if (prices) product.prices = JSON.parse(prices);
+
+        if (sizevariants) product.sizevariants = JSON.parse(sizevariants);
+
+        if (product.images) {
+          product.images = JSON.parse(product.images);
+        }
+      });
+      this.addPricesForSelectedItem();
+      this.addSizesForSelectedItem();
+    },
     addNewProduct() {
       this.isEditMode = false;
       this.isAddMode = true;
@@ -586,7 +588,6 @@ export default {
       console.log(this.editedItem);
     },
     addPricesForSelectedItem() {
-      this.editedItem.productId = this.newProductId;
       if (this.editedItem.prices.length == 0) {
         for (var i = 0; i < this.countries.length; i++) {
           this.editedItem.prices.push({
@@ -603,7 +604,6 @@ export default {
       this.editedItem.prices.splice(this.editedIndex, 1);
     },
     addSizesForSelectedItem() {
-      this.editedItem.productId = this.newProductId;
       if (this.editedItem.sizevariants.length == 0) {
         for (var i = 1; i < this.sizes.length; i++) {
           let payload = {
@@ -681,9 +681,9 @@ export default {
             await updateProducts(this.editedItem);
             Object.assign(this.products[this.editedIndex], this.editedItem);
           } else {
-            console.log(this.editedItem);
             await addProducts(this.editedItem);
             this.products.unshift(this.editedItem);
+            await this.processProducts();
             this.$toast.success("Product added successfully", {
               position: this.position,
               timeout: 6000,
@@ -705,19 +705,11 @@ export default {
       if (status) return "green";
       else return "red";
     },
+    //eslint-disable-next-line
     async uploadImageSuccess(formData, index, fileList) {
-      console.log("data", formData, index, fileList);
-      // Upload image api
-      // axios.post('http://your-url-upload', formData).then(response => {
-      //   console.log(response)
-      // })
-      // let files = await this.gatherFormData(formData);
       let response = await uploadFile(formData);
-      response.index=index;
-      console.log(response,"response");
+      response.index = index;
       this.editedItem.images.push(response);
-      // Add image from folder
-      // Update the file url object - editItemObject
     },
     //eslint-disable-next-line
     async beforeRemove(index, done, fileList) {
@@ -725,28 +717,30 @@ export default {
       if (r == true) {
         done();
         //eslint-disable-next-line
-         let productImages = this.editedItem.images;
-         let imageToBeRemoved = productImages.find(imageItem=>imageItem.index == index);
-         const actualIndex = productImages.indexOf(imageToBeRemoved);
-          if (actualIndex > -1) {
-            productImages.splice(actualIndex, 1);
-          }
-         this.editedItem.images = productImages;
-         await removeFile(imageToBeRemoved.filename);
-               this.$toast.success("Image removed successfully", {
-              position: this.position,
-              timeout: 6000,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              draggablePercent: 0.6,
-              showCloseButtonOnHover: false,
-              hideProgressBar: true,
-              closeButton: "button",
-              icon: true,
-            });
+        let productImages = this.editedItem.images;
+        let imageToBeRemoved = productImages.find(
+          (imageItem) => imageItem.index == index
+        );
+        const actualIndex = productImages.indexOf(imageToBeRemoved);
+        if (actualIndex > -1) {
+          productImages.splice(actualIndex, 1);
+        }
+        this.editedItem.images = productImages;
+        await removeFile(imageToBeRemoved.filename);
+        this.$toast.success("Image removed successfully", {
+          position: this.position,
+          timeout: 6000,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+        });
       }
-    }   
+    },
   },
 };
 </script>
@@ -754,11 +748,11 @@ export default {
 <style src="./Basic.scss" lang="scss" />
 
 <style lang="scss" scoped>
-::v-deep .image-primary{
-    display: none !important;
+::v-deep .image-primary {
+  display: none !important;
 }
 
-::v-deep .image-bottom-left{
-    display: none !important;
+::v-deep .image-bottom-left {
+  display: none !important;
 }
 </style>

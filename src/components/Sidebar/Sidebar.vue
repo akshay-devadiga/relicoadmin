@@ -105,6 +105,7 @@ import {mapActions, mapState} from 'vuex'
           // { title: 'Dashboard', icon: 'mdi-chart-tree', link: '/dashboard' },
           { title: 'Orders', icon: 'mdi-cart-outline', link: '/orders' },
           { title: 'Products', icon: 'mdi-hanger', link: '/products' },
+          { title: 'Settings', icon: 'mdi-cog-outline', link: '/homePageSettings' },
           // { title: 'Customers', icon: 'mdi-account-group', link: '/notifications' }
         ],
         sidebarWidth: 240,

@@ -161,3 +161,75 @@ export const deleteProduct = async (productId) => {
     console.error(error);
   }
 }
+
+
+export const uploadPanelFile = async (files) => {
+  try {
+    let config = {
+      header : {
+       'Content-Type' : 'multipart/form-data'
+     }
+    }
+    const response = await axios.post(`/panel-upload`,files,config);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+export const getCarouselImages = async () => {
+  try {
+    const response = await axios.get(`/carouselImages`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const getPanelImages = async () => {
+  try {
+    const response = await axios.get(`/panelImages`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const getOfferImages = async () => {
+  try {
+    const response = await axios.get(`/offerImages`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+export const updateCarouselImages = async (imageOb) => {
+  try {
+    const response = await axios.put(`/updateCarouselImages`,imageOb);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const updatePanelImages = async (imageOb) => {
+  try {
+    const response = await axios.put(`/updatePanelImages`,imageOb);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+export const updateOfferImages = async (imageOb) => {
+  try {
+    const response = await axios.put(`/updateOfferImages`,imageOb);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

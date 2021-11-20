@@ -4,7 +4,7 @@ import Router from 'vue-router';
 import Layout from '@/components/Layout/Layout';
 
 // Pages
-import Dashboard from '@/pages/Dashboard/Dashboard';
+import HomePageSettings from '@/pages/HomePageSettings/HomePageSettings';
 import Typography from '@/pages/Typography/Typography'
 import Products from '@/pages/Products/Basic'
 import Notifications from '@/pages/Notifications/Notifications'
@@ -31,9 +31,9 @@ let router = new Router({
     component: Layout,
     children: [
       {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: Dashboard,
+        path: 'homePageSettings',
+        name: 'HomePageSettings',
+        component: HomePageSettings,
         meta: { requiresAuth: true }
       },
       {
