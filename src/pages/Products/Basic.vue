@@ -459,7 +459,7 @@ export default {
           text: "Id",
           align: "start",
           sortable: false,
-          value: "productId",
+          value: "id",
         },
         { text: "Images", value: "images" },
         { text: "Name", value: "name" },
