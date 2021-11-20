@@ -553,6 +553,7 @@ export default {
         product.brand = JSON.parse(product.brand);
         product.category = JSON.parse(product.category);
         product.discount = JSON.parse(product.discount);
+        product.status = product.status=='true'?true:false;
         /*
           TODO- Fix later Edge case - Discount has issue with object reference 
       */
