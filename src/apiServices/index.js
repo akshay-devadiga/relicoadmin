@@ -155,7 +155,7 @@ export const removeFile = async (fileName) => {
 
 export const deleteProduct = async (productId) => {
   try {
-    const response = await axios.put(`/products/${productId}`);
+    const response = await axios.delete(`/products/${productId}`);
     return response.data;
   } catch (error) {
     console.error(error);

@@ -635,7 +635,7 @@ export default {
     },
 
     async deleteItemConfirm() {
-      await deleteProduct(this.editedItem.productId);
+      await deleteProduct(this.editedItem.id);
       this.products.splice(this.editedIndex, 1);
       this.closeDelete();
     },
