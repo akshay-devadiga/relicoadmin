@@ -93,8 +93,8 @@
           v => !!v || 'E-mail is required',
           v => /.+@.+/.test(v) || 'E-mail must be valid',
         ],
-        adminEmail: 'admin@thejerseystore.com',
-        adminpassword: 'theJ_str@293_',
+        adminEmail: 'admin@relico.com',
+        adminpassword: 'admin12345',
         password: '',
         passRules: [
           v => !!v || 'Password is required',
