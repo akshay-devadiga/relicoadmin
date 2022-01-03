@@ -5,14 +5,14 @@
         <v-col cols="7" class="main-part d-none d-md-none d-lg-flex">
           <div class="d-flex">
             <!-- @/assets/logo.svg -->
-            <v-img src="https://blog.logomyway.com/wp-content/uploads/2017/01/nba-logo-1.jpg" height="200" width="350" contain></v-img>
+            <v-img src="https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/shopping_cart.png" height="200" width="350" contain></v-img>
             
               <v-badge
             color="green"
             content="BETA"
           >
             <!-- <p>Relico</p> -->
-               <p class="text-h3">TheJerseyStore</p>
+               <p class="text-h3">Relico - Admin</p>
           </v-badge>
           </div>
         </v-col>
