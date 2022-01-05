@@ -18,6 +18,7 @@ Vue.use(Router);
 
 let router = new Router({
   mode:'history',
+  base: '/relicoadmin/',
   routes: [
     {
       path: '/login',
